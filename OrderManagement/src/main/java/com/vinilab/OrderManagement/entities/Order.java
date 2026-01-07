@@ -1,5 +1,4 @@
 package com.vinilab.OrderManagement.entities;
-import ch.qos.logback.core.net.server.Client;
 import com.vinilab.OrderManagement.enums.OrderStatus;
 import jakarta.persistence.*;
 import java.io.Serial;
