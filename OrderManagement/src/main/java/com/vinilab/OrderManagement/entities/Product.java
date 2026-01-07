@@ -1,14 +1,13 @@
 package com.vinilab.OrderManagement.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity
+@Table(name = "tb_product")
 public class Product  implements Serializable {
 
     private static final long serialVersionUID = 1L;
