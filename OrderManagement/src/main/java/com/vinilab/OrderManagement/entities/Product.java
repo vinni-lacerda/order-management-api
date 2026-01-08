@@ -23,15 +23,15 @@ public class Product  implements Serializable {
     private BigDecimal price;
 
     @Column(nullable = false)
-    private Integer quantity;
+    private Integer stockQuantity;
 
     public Product() {
     }
 
-    public Product(String name, BigDecimal price, Integer quantity) {
+    public Product(String name, BigDecimal price, Integer stockQuantity) {
         this.name = name;
-        this.price = price;
-        this.quantity = quantity;
+        changePrice(price);
+        updateStockQuantity(stockQuantity);
     }
 
     public String getName() {
@@ -46,16 +46,22 @@ public class Product  implements Serializable {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void changePrice(BigDecimal price) {
+        if(price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Price must be greater than 0");
+        }
         this.price = price;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Integer getStockQuantity() {
+            return stockQuantity;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void updateStockQuantity(Integer stockQuantity) {
+        if(stockQuantity == null || stockQuantity < 0){
+            throw new IllegalArgumentException("Stock quantity must be 0 or greater");
+        }
+        this.stockQuantity = stockQuantity;
     }
 
     @Override
