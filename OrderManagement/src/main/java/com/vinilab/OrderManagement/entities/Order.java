@@ -39,6 +39,10 @@ public class Order implements Serializable {
         this.orderStatus = OrderStatus.CREATED;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public User getUser() {
         return user;
     }
