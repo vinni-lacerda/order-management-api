@@ -5,6 +5,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,9 +20,14 @@ public class Order implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_id", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private OrderStatus orderStatus;
 
     @Column(nullable = false)
@@ -32,9 +39,9 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(User user, BigDecimal totalPrice, LocalDateTime createdAt, OrderStatus orderStatus) {
+    public Order(User user, BigDecimal totalPrice) {
         this.user = user;
-        this.totalPrice = totalPrice;
+        updateTotalPrice(totalPrice);
         this.createdAt = LocalDateTime.now();
         this.orderStatus = OrderStatus.CREATED;
     }
@@ -56,6 +63,9 @@ public class Order implements Serializable {
     }
 
     public void setOrderStatus(OrderStatus orderStatus) {
+        if(orderStatus == null){
+            throw new IllegalArgumentException("Invalid order status");
+        }
         this.orderStatus = orderStatus;
     }
 
@@ -63,16 +73,15 @@ public class Order implements Serializable {
         return totalPrice;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
+    public void updateTotalPrice(BigDecimal totalPrice) {
+       if(totalPrice == null || totalPrice.compareTo(BigDecimal.ZERO) < 0){
+           throw new IllegalArgumentException("price must be 0 or greater");
+       }
         this.totalPrice = totalPrice;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     @Override
