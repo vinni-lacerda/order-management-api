@@ -34,6 +34,10 @@ public class Product  implements Serializable {
         updateStockQuantity(stockQuantity);
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
