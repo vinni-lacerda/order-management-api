@@ -39,6 +39,10 @@ public class User implements Serializable {
         return Collections.unmodifiableList(orders);
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
