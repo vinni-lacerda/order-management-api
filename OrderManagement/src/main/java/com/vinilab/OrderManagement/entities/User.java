@@ -3,6 +3,9 @@ package com.vinilab.OrderManagement.entities;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,8 +21,11 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 
     public User() {
     }
@@ -27,6 +33,10 @@ public class User implements Serializable {
     public User(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public List<Order> getOrders() {
+        return Collections.unmodifiableList(orders);
     }
 
     public String getName() {
@@ -43,6 +53,15 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void addOrder(Order order){
+        order.setUser(this);
+        this.orders.add(order);
+    }
+
+    public void removeOrder(Order order){
+        this.orders.remove(order);
     }
 
     @Override
