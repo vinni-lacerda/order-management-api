@@ -53,11 +53,12 @@ public class User implements Serializable {
         return email;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    private void changeName(String name){
+       validateName(name);
+       this.name = name;
     }
-
-    public void setEmail(String email) {
+    private void changeEmail(String email){
+        validateEmail(email);
         this.email = email;
     }
     private void validateName(String name) {
