@@ -38,8 +38,18 @@ public class OrderItem implements Serializable {
             throw new IllegalArgumentException("Quantity cannot be less than 1");
         }
         this.quantity = quantity;
+        if(order == null){
+            throw new IllegalArgumentException("Order cannot be null");
+        }
         this.order = order;
+        if(product == null){
+            throw new IllegalArgumentException("Product cannot be null");
+        }
         this.product = product;
+        if(unitPrice == null || unitPrice.compareTo(BigDecimal.ZERO) <= 0){
+            throw new IllegalArgumentException("unit price must be greater than zero");
+        }
+        this.unitPrice = unitPrice;
     }
 
     public Product getProduct() {
@@ -63,7 +73,7 @@ public class OrderItem implements Serializable {
     public void increaseQuantity(int amount){
         updateQuantity(this.quantity + amount);
     }
-
+    
     public Long getId() {
         return id;
     }
