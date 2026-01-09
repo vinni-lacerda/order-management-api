@@ -71,6 +71,9 @@ public class OrderItem implements Serializable {
         this.quantity = quantity;
     }
     public void increaseQuantity(int amount){
+        if(amount < 0 ){
+            throw new IllegalArgumentException("Increase amount must be greater than 0");
+        }
         updateQuantity(this.quantity + amount);
     }
 
