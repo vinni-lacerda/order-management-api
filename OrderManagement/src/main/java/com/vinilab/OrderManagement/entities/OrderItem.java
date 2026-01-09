@@ -54,7 +54,10 @@ public class OrderItem {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void updateQuantity(int quantity) {
+        if(this.quantity < 1){
+            throw new IllegalArgumentException("Quantity cannot be less than 1");
+        }
         this.quantity = quantity;
     }
 
