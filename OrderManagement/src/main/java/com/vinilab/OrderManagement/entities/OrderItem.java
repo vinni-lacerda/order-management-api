@@ -2,11 +2,13 @@ package com.vinilab.OrderManagement.entities;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_order_item")
-public class OrderItem {
+public class OrderItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -15,20 +17,23 @@ public class OrderItem {
     private Long id;
 
     @Column(nullable = false)
-    private int quantity;
+    private Integer quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @Column(nullable = false)
+    private BigDecimal unitPrice;
 
     public OrderItem() {
     }
 
-    public OrderItem(int quantity, Order order, Product product) {
+    public OrderItem(Integer quantity, Order order, Product product, BigDecimal unitPrice) {
         if(quantity < 1){
             throw new IllegalArgumentException("Quantity cannot be less than 1");
         }
@@ -41,16 +46,8 @@ public class OrderItem {
         return product;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public Order getOrder() {
         return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
     public int getQuantity() {
@@ -58,16 +55,13 @@ public class OrderItem {
     }
 
     public void updateQuantity(int quantity) {
-        if(this.quantity < 1){
+        if(quantity < 1){
             throw new IllegalArgumentException("Quantity cannot be less than 1");
         }
         this.quantity = quantity;
     }
-    public void addQuantity(){
-        if(this.quantity < 1){
-            throw new IllegalArgumentException("Quantity cannot be less than 1");
-        }
-        this.quantity = quantity + 1;
+    public void increaseQuantity(int amount){
+        updateQuantity(this.quantity + amount);
     }
 
     public Long getId() {
@@ -76,8 +70,10 @@ public class OrderItem {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof OrderItem orderItem)) return false;
-        return Objects.equals(id, orderItem.id);
+        if (this == o) return true;
+        if (!(o instanceof OrderItem)) return false;
+        OrderItem other = (OrderItem) o;
+        return id != null && id.equals(other.id);
     }
 
     @Override
