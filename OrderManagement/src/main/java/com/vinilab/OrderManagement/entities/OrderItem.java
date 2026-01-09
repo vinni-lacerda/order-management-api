@@ -60,6 +60,12 @@ public class OrderItem {
         }
         this.quantity = quantity;
     }
+    public void addQuantity(){
+        if(this.quantity < 1){
+            throw new IllegalArgumentException("Quantity cannot be less than 1");
+        }
+        this.quantity = quantity + 1;
+    }
 
     public Long getId() {
         return id;
