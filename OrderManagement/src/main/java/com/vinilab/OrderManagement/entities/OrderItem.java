@@ -73,7 +73,11 @@ public class OrderItem implements Serializable {
     public void increaseQuantity(int amount){
         updateQuantity(this.quantity + amount);
     }
-    
+
+    public BigDecimal getSubTotal(){
+        return unitPrice.multiply(BigDecimal.valueOf(quantity));
+    }
+
     public Long getId() {
         return id;
     }
