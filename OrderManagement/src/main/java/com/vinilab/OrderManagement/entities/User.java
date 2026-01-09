@@ -31,6 +31,8 @@ public class User implements Serializable {
     }
 
     public User(String name, String email) {
+        validateEmail(email);
+        validateName(name);
         this.name = name;
         this.email = email;
     }
@@ -58,14 +60,16 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public void addOrder(Order order){
-        order.setUser(this);
-        this.orders.add(order);
+    private void validateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name must be provided");
+        }
     }
 
-    public void removeOrder(Order order){
-        this.orders.remove(order);
+    private void validateEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email must be provided");
+        }
     }
 
     @Override
