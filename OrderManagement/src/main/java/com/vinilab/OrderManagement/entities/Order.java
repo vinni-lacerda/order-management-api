@@ -6,8 +6,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "tb_order")
@@ -39,9 +39,10 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(User user, BigDecimal totalPrice) {
+    public Order(User user) {
+        if(user == null){throw new IllegalArgumentException("Order must have a user");}
         this.user = user;
-        updateTotalPrice(totalPrice);
+        this.totalPrice = BigDecimal.ZERO;
         this.createdAt = LocalDateTime.now();
         this.orderStatus = OrderStatus.CREATED;
     }
@@ -54,30 +55,65 @@ public class Order implements Serializable {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public OrderStatus getOrderStatus() {
         return orderStatus;
-    }
-
-    public void setOrderStatus(OrderStatus orderStatus) {
-        if(orderStatus == null){
-            throw new IllegalArgumentException("Invalid order status");
-        }
-        this.orderStatus = orderStatus;
     }
 
     public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void updateTotalPrice(BigDecimal totalPrice) {
+    private void updateTotalPrice(BigDecimal totalPrice) {
        if(totalPrice == null || totalPrice.compareTo(BigDecimal.ZERO) < 0){
            throw new IllegalArgumentException("price must be 0 or greater");
        }
         this.totalPrice = totalPrice;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return Collections.unmodifiableList(orderItems);
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        if(orderItem == null){
+            throw new IllegalArgumentException("Order item is null");
+        }
+        orderItem.setOrder(this);
+        this.orderItems.add(orderItem);
+    }
+
+    public void removeOrderItem(OrderItem item){
+        if(item == null){
+            throw new IllegalArgumentException("Order item is null");
+        }
+        this.orderItems.remove(item);
+        item.setOrder(null);
+    }
+
+    public void payOrder(){
+        if(this.orderStatus != OrderStatus.CREATED){
+            throw new IllegalStateException("Order cannot be paid");
+        }
+        this.orderStatus = OrderStatus.PAID;
+    }
+
+    public void cancelOrder(){
+        if(this.orderStatus == OrderStatus.CANCELLED ){
+            throw new IllegalStateException("Order already cancelled");
+        }
+        this.orderStatus = OrderStatus.CANCELLED;
+    }
+    public void shipOrder(){
+        if(this.orderStatus != OrderStatus.PAID){
+            throw new IllegalStateException("Order must be created and/or paid before shipping");
+        }
+        this.orderStatus = OrderStatus.SHIPPED;
+    }
+    public void markOrderAsDelivered(){
+        if(this.orderStatus != OrderStatus.SHIPPED){
+            throw new IllegalStateException("Order must be shipped before");
+        }
+        this.orderStatus = OrderStatus.DELIVERED;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -86,12 +122,14 @@ public class Order implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Order order)) return false;
-        return Objects.equals(id, order.id);
+        if(this == o) return true;
+        if (!(o instanceof Order)) return false;
+        Order other = (Order) o;
+        return id != null && id.equals(other.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return getClass().hashCode();
     }
 }
