@@ -60,7 +60,7 @@ public class OrderItem implements Serializable {
         return order;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
