@@ -29,6 +29,9 @@ public class OrderItem {
     }
 
     public OrderItem(int quantity, Order order, Product product) {
+        if(quantity < 1){
+            throw new IllegalArgumentException("Quantity cannot be less than 1");
+        }
         this.quantity = quantity;
         this.order = order;
         this.product = product;
