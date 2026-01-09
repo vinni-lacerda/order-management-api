@@ -27,7 +27,7 @@ public class OrderItem implements Serializable {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal unitPrice;
 
     public OrderItem() {
