@@ -78,7 +78,7 @@ public class Order implements Serializable {
         if(orderItem == null){
             throw new IllegalArgumentException("Order item is null");
         }
-        orderItem.setOrder(this);
+        orderItem.assignToOrder(this);
         this.orderItems.add(orderItem);
     }
 
@@ -87,7 +87,7 @@ public class Order implements Serializable {
             throw new IllegalArgumentException("Order item is null");
         }
         this.orderItems.remove(item);
-        item.setOrder(null);
+        item.assignToOrder(null);
     }
 
     public void payOrder(){
