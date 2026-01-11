@@ -19,7 +19,7 @@ public class Product  implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
 
     @Column(nullable = false)
@@ -29,6 +29,7 @@ public class Product  implements Serializable {
     }
 
     public Product(String name, BigDecimal price, Integer stockQuantity) {
+        validateName(name);
         this.name = name;
         changePrice(price);
         updateStockQuantity(stockQuantity);
@@ -42,7 +43,9 @@ public class Product  implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    public void updateName(String name)
+    {
+        validateName(name);
         this.name = name;
     }
 
@@ -68,14 +71,22 @@ public class Product  implements Serializable {
         this.stockQuantity = stockQuantity;
     }
 
+    private void validateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name must be provided");
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Product product)) return false;
-        return Objects.equals(id, product.id);
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product other = (Product) o;
+        return id != null && id.equals(other.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return getClass().hashCode();
     }
 }
