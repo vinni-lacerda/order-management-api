@@ -34,23 +34,16 @@ public class OrderItem implements Serializable {
     }
 
     public OrderItem(Integer quantity, Order order, Product product, BigDecimal unitPrice) {
-        if(quantity < 1){
-            throw new IllegalArgumentException("Quantity cannot be less than 1");
-        }
+        validateQuantity(quantity);
         this.quantity = quantity;
-        if(order == null){
-            throw new IllegalArgumentException("Order cannot be null");
-        }
+        validateOrder(order);
         this.order = order;
-        if(product == null){
-            throw new IllegalArgumentException("Product cannot be null");
-        }
+        validateProduct(product);
         this.product = product;
-        if(unitPrice == null || unitPrice.compareTo(BigDecimal.ZERO) <= 0){
-            throw new IllegalArgumentException("unit price must be greater than zero");
-        }
+        validateUnitPrice(unitPrice);
         this.unitPrice = unitPrice;
     }
+
 
     public Product getProduct() {
         return product;
@@ -60,16 +53,44 @@ public class OrderItem implements Serializable {
         return order;
     }
 
+    public void assignToOrder(Order order){
+        validateOrder(order);
+        this.order = order;
+    }
+
+    private void validateOrder(Order order){
+        if(order == null){
+            throw new IllegalArgumentException("Order cannot be null");
+        }
+    }
+
+    private void validateProduct(Product product){
+        if(product == null){
+            throw new IllegalArgumentException("Product cannot be null");
+        }
+    }
+
+    private void validateUnitPrice(BigDecimal unitPrice) {
+        if(unitPrice == null || unitPrice.compareTo(BigDecimal.ZERO) <= 0){
+            throw new IllegalArgumentException("unit price must be greater than zero");
+        }
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
 
-    public void updateQuantity(int quantity) {
-        if(quantity < 1){
-            throw new IllegalArgumentException("Quantity cannot be less than 1");
-        }
+    public void updateQuantity(Integer quantity) {
+        validateQuantity(quantity);
         this.quantity = quantity;
     }
+
+    private void validateQuantity(Integer quantity){
+        if(quantity == null || quantity < 1 ){
+            throw new IllegalArgumentException("Quantity cannot be less than 1");
+        }
+    }
+
     public void increaseQuantity(int amount){
         if(amount <= 0 ){
             throw new IllegalArgumentException("Increase amount must be greater than 0");
