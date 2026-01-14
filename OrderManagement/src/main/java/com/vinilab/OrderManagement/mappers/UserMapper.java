@@ -5,7 +5,7 @@ import com.vinilab.OrderManagement.entities.User;
 
 public class UserMapper {
 
-    public UserMapper() {
+    private UserMapper() {
     }
 
     public static User userToEntity(UserDTO dto){
