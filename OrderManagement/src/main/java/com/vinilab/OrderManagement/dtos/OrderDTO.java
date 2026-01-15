@@ -1,4 +1,6 @@
 package com.vinilab.OrderManagement.dtos;
+import com.vinilab.OrderManagement.entities.OrderItem;
+import com.vinilab.OrderManagement.entities.User;
 import com.vinilab.OrderManagement.enums.OrderStatus;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
