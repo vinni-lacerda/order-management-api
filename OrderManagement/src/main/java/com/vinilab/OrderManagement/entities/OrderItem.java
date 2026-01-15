@@ -1,10 +1,7 @@
 package com.vinilab.OrderManagement.entities;
-
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Entity
 @Table(name = "tb_order_item")
@@ -104,6 +101,10 @@ public class OrderItem implements Serializable {
 
     public Long getId() {
         return id;
+    }
+
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
     }
 
     @Override
