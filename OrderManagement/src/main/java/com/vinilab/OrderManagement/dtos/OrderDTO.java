@@ -1,6 +1,4 @@
 package com.vinilab.OrderManagement.dtos;
-import com.vinilab.OrderManagement.entities.OrderItem;
-import com.vinilab.OrderManagement.entities.User;
 import com.vinilab.OrderManagement.enums.OrderStatus;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -21,10 +19,10 @@ public class OrderDTO {
     private OrderStatus orderStatus;
 
     @NotNull
-    @PositiveOrZero
+    @PositiveOrZero(message = "Total price must be 0 or greater")
     private BigDecimal totalPrice;
 
-    @NotNull
+    @NotNull(message = "created at cannot be null")
     private LocalDateTime createdAt;
 
     public OrderDTO() {
