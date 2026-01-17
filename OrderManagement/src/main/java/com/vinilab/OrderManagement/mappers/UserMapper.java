@@ -2,13 +2,15 @@ package com.vinilab.OrderManagement.mappers;
 
 import com.vinilab.OrderManagement.dtos.UserDTO;
 import com.vinilab.OrderManagement.entities.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper {
 
     private UserMapper() {
     }
 
-    public static User userToEntity(UserDTO dto){
+    public User toEntity(UserDTO dto){
         if(dto == null){
             throw new IllegalArgumentException("UserDTO cannot be null");
         }
@@ -19,7 +21,7 @@ public class UserMapper {
         );
     }
 
-    public static UserDTO toDTO(User entity){
+    public UserDTO toDTO(User entity){
         if(entity == null){
             throw new IllegalArgumentException("User cannot be null");
         }
