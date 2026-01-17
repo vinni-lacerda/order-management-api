@@ -8,7 +8,7 @@ public class ProductMapper {
     private ProductMapper() {
     }
 
-    public static Product productToEntity(ProductDTO dto){
+    public Product toEntity(ProductDTO dto){
         if(dto == null){
             throw new IllegalArgumentException("ProductDTO cannot be null");
         }
@@ -19,7 +19,7 @@ public class ProductMapper {
         );
     }
 
-    public static ProductDTO toDTO(Product entity){
+    public ProductDTO toDTO(Product entity){
         if(entity == null){
             throw new IllegalArgumentException("Product cannot be null");
         }
