@@ -5,7 +5,6 @@ import com.vinilab.OrderManagement.dtos.UserDTO;
 import com.vinilab.OrderManagement.entities.User;
 import com.vinilab.OrderManagement.mappers.UserMapper;
 import com.vinilab.OrderManagement.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
