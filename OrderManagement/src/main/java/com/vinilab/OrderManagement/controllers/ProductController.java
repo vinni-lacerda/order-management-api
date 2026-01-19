@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "api/v1/products")
+@RequestMapping("api/v1/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -39,10 +39,7 @@ public class ProductController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id,@RequestBody @Valid ProductDTO dto){
-        ProductDTO entity = productService.findById(id);
-        entity.setName(dto.getName());
-        entity.setPrice(dto.getPrice());
-        entity.setStockQuantity(dto.getStockQuantity());
+        ProductDTO entity = productService.updateProduct(id, dto);
         return ResponseEntity.ok().body(entity);
     }
     
