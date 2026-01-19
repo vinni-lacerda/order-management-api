@@ -26,6 +26,12 @@ public class ProductService {
         return productRepository.findAll().stream().map(productMapper::toDTO).toList();
     }
 
+    public ProductDTO createProduct(ProductDTO dto){
+        Product product = productMapper.toEntity(dto);
+        Product savedProduct = productRepository.save(product);
+        return productMapper.toDTO(savedProduct);
+    }
+
     public ProductDTO updateProduct(Long id, ProductDTO dto){
         Product entity = findProductOrThrow(id);
         entity.updateName(dto.getName());
