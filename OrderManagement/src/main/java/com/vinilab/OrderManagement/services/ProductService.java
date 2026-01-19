@@ -5,10 +5,12 @@ import com.vinilab.OrderManagement.exceptions.ProductNotFoundException;
 import com.vinilab.OrderManagement.mappers.ProductMapper;
 import com.vinilab.OrderManagement.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
@@ -18,10 +20,12 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
+    @Transactional(readOnly = true)
     public ProductDTO findById(Long id){
         return productMapper.toDTO(findProductOrThrow(id));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDTO> findAll(){
         return productRepository.findAll().stream().map(productMapper::toDTO).toList();
     }
@@ -44,7 +48,7 @@ public class ProductService {
         Product product = findProductOrThrow(id);
         productRepository.deleteById(product.getId());
     }
-
+   @Transactional(readOnly = true)
    public Product findProductOrThrow(Long id){
         if(id == null){
             throw new IllegalArgumentException("Product id cannot be null");
