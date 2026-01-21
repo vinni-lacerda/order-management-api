@@ -55,7 +55,7 @@ public class OrderService {
 
     public OrderDTO updateItemQuantity(Long orderId, Long itemId, Integer quantity){
         Order order = orderOrThrow(orderId);
-        OrderItem item = order.getOrderItems().stream().filter(i -> i.getId().equals(itemId)).findFirst().orElseThrow(() -> new RuntimeException("item not found"));
+        OrderItem item = order.getOrderItems().stream().filter(i -> i.getId().equals(itemId)).findFirst().orElseThrow(() -> new OrderItemNotFoundException(itemId));
 
         item.updateQuantity(quantity);
         return orderMapper.toDTO(order);
