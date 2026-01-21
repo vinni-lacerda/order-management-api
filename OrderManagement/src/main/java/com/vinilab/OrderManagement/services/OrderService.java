@@ -2,13 +2,14 @@ package com.vinilab.OrderManagement.services;
 
 import com.vinilab.OrderManagement.dtos.OrderDTO;
 import com.vinilab.OrderManagement.entities.Order;
+import com.vinilab.OrderManagement.entities.OrderItem;
+import com.vinilab.OrderManagement.entities.Product;
 import com.vinilab.OrderManagement.exceptions.OrderNotFoundException;
 import com.vinilab.OrderManagement.mappers.OrderMapper;
 import com.vinilab.OrderManagement.repositories.OrderRepository;
+import com.vinilab.OrderManagement.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -17,28 +18,50 @@ import java.util.List;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final ProductRepository productRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
+        this.productRepository = productRepository;
     }
 
-    @GetMapping
+
     public List<OrderDTO> findAll(){
         return orderRepository.findAll().stream().map(orderMapper::toDTO).toList();
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/{id}")
     public OrderDTO findById(Long id){
         Order order = orderOrThrow(id);
         return orderMapper.toDTO(order);
     }
 
-    @PostMapping("/{id}")
-    public OrderDTO createOrder(OrderDTO dto){
-        Order order = new Order();
-        order
+    public OrderDTO addItem(Long orderId, Long productId, Integer quantity){
+       Order order = orderOrThrow(orderId);
+       Product product = productRepository.getReferenceById(productId);
+        OrderItem item = new OrderItem(
+                quantity,
+                order,
+                product,
+                product.getPrice()
+        );
+
+        order.addOrderItem(item);
+
+        orderRepository.save(order);
+        return orderMapper.toDTO(order);
+    }
+
+    public OrderDTO updateItemQuantity(Long orderId, Long itemId, Integer quantity){
+        Order order = orderOrThrow(orderId);
+        OrderItem item = order.getOrderItems().stream().filter(i -> i.getId().equals(itemId)).findFirst().orElseThrow(() -> new RuntimeException("item not found"));
+
+        updateItemQuantity(quantity);
+        return orderMapper.toDTO(order);
+    }
+
+    private void updateItemQuantity(Integer quantity) {
     }
 
     public OrderDTO updateOrder(Long id, OrderDTO dto){
