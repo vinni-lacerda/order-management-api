@@ -4,7 +4,9 @@ import com.vinilab.OrderManagement.dtos.OrderDTO;
 import com.vinilab.OrderManagement.entities.Order;
 import com.vinilab.OrderManagement.entities.OrderItem;
 import com.vinilab.OrderManagement.entities.Product;
+import com.vinilab.OrderManagement.exceptions.OrderItemNotFoundException;
 import com.vinilab.OrderManagement.exceptions.OrderNotFoundException;
+import com.vinilab.OrderManagement.mappers.OrderItemMapper;
 import com.vinilab.OrderManagement.mappers.OrderMapper;
 import com.vinilab.OrderManagement.repositories.OrderRepository;
 import com.vinilab.OrderManagement.repositories.ProductRepository;
@@ -73,10 +75,28 @@ public class OrderService {
         );
     }
 
+    public OrderDTO removeItem(Long id, Long itemId){
+        Order order = orderOrThrow(id);
+
+        OrderItem item = order.getOrderItems().stream()
+                .filter(i -> i.getId().equals(itemId))
+                .findFirst()
+                .orElseThrow(() -> new OrderItemNotFoundException(itemId));
+
+        order.removeOrderItem(item);
+
+        return orderMapper.toDTO(order);
+    }
+
+    public void removeOrder(Long id){
+        Order order = orderOrThrow(id);
+        orderRepository.delete(order);
+    }
+
     @Transactional(readOnly = true)
     public Order orderOrThrow(Long id){
         if(id == null){
-            throw new IllegalArgumentException("Order cannot be null");
+            throw new IllegalArgumentException("Order item id cannot be null");
         }
         return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
     }
