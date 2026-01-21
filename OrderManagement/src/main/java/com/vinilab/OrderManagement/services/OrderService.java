@@ -63,11 +63,14 @@ public class OrderService {
 
     public OrderDTO updateOrder(Long id, OrderDTO dto){
         Order order = orderOrThrow(id);
-        dto.setUserId(order.getUser().getId());
-        dto.setCreatedAt(order.getCreatedAt());
-        dto.setTotalPrice(order.getTotalPrice());
-        dto.setOrderItems(order.getOrderItems().stream().map().toList());
-        dto.setOrderStatus(order.getOrderStatus());
+
+        return new OrderDTO(
+        order.getUser().getId(),
+        order.getOrderItems().stream().map(OrderItemMapper::toDTO).toList(),
+        order.getOrderStatus(),
+        order.getTotalPrice(),
+        order.getCreatedAt()
+        );
     }
 
     @Transactional(readOnly = true)
