@@ -37,6 +37,9 @@ public class OrderDTO {
         this.createdAt = createdAt;
     }
 
+    public OrderDTO(Long id, List<OrderItemDTO> list, OrderStatus orderStatus, BigDecimal totalPrice, LocalDateTime createdAt) {
+    }
+
     public Long getId() {
         return id;
     }
