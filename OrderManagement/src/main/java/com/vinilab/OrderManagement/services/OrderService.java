@@ -6,7 +6,7 @@ import com.vinilab.OrderManagement.entities.OrderItem;
 import com.vinilab.OrderManagement.entities.Product;
 import com.vinilab.OrderManagement.exceptions.OrderItemNotFoundException;
 import com.vinilab.OrderManagement.exceptions.OrderNotFoundException;
-import com.vinilab.OrderManagement.mappers.OrderItemMapper;
+import com.vinilab.OrderManagement.exceptions.ProductNotFoundException;
 import com.vinilab.OrderManagement.mappers.OrderMapper;
 import com.vinilab.OrderManagement.repositories.OrderRepository;
 import com.vinilab.OrderManagement.repositories.ProductRepository;
@@ -41,7 +41,7 @@ public class OrderService {
 
     public OrderDTO addItem(Long orderId, Long productId, Integer quantity){
        Order order = orderOrThrow(orderId);
-       Product product = productRepository.getReferenceById(productId);
+       Product product = productRepository.findById(productId).orElseThrow(()-> new ProductNotFoundException(productId));
         OrderItem item = new OrderItem(
                 quantity,
                 order,
@@ -50,7 +50,6 @@ public class OrderService {
         );
 
         order.addOrderItem(item);
-
         orderRepository.save(order);
         return orderMapper.toDTO(order);
     }
