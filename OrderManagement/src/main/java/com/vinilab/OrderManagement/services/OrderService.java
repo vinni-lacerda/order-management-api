@@ -65,14 +65,8 @@ public class OrderService {
 
     public OrderDTO updateOrder(Long id, OrderDTO dto){
         Order order = orderOrThrow(id);
-
-        return new OrderDTO(
-        order.getUser().getId(),
-        order.getOrderItems().stream().map(OrderItemMapper::toDTO).toList(),
-        order.getOrderStatus(),
-        order.getTotalPrice(),
-        order.getCreatedAt()
-        );
+        order.changeStatus(dto.getOrderStatus());
+        return orderMapper.toDTO(order);
     }
 
     public OrderDTO removeItem(Long id, Long itemId){
