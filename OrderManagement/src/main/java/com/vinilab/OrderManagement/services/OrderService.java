@@ -90,7 +90,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Order orderOrThrow(Long id){
         if(id == null){
-            throw new IllegalArgumentException("Order item id cannot be null");
+            throw new IllegalArgumentException("Order id cannot be null");
         }
         return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
     }
