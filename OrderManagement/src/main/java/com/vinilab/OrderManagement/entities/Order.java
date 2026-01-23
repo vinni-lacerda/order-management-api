@@ -116,6 +116,17 @@ public class Order implements Serializable {
         this.orderStatus = OrderStatus.DELIVERED;
     }
 
+    public void changeStatus(OrderStatus orderStatus){
+        if(orderStatus == null){
+            throw new IllegalArgumentException("order status cannot be null");
+        }
+
+        if(orderStatus == OrderStatus.CANCELLED){
+            throw new IllegalStateException("Cancelled order cannot change status");
+        }
+        this.orderStatus = orderStatus;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
