@@ -28,7 +28,7 @@ public class OrderService {
         this.productRepository = productRepository;
     }
 
-
+    @Transactional(readOnly = true)
     public List<OrderDTO> findAll(){
         return orderRepository.findAll().stream().map(orderMapper::toDTO).toList();
     }
