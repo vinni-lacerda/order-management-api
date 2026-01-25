@@ -81,6 +81,14 @@ public class OrderService {
         return orderMapper.toDTO(order);
     }
 
+    public OrderDTO createOrder(OrderDTO dto){
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(()-> new UserNotFoundException(dto.getUserId()));
+        Order order = new Order(user);
+
+        orderRepository.save(order);
+        return orderMapper.toDTO(order);
+    }
+
     public void removeOrder(Long id){
         Order order = orderOrThrow(id);
         orderRepository.delete(order);
