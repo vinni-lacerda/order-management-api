@@ -2,13 +2,14 @@ package com.vinilab.OrderManagement.controllers;
 import com.vinilab.OrderManagement.dtos.OrderDTO;
 import com.vinilab.OrderManagement.services.OrderService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/orders")
+@RequestMapping("/api/v1/orders")
 public class OrderController {
 
     OrderService orderService;
@@ -30,7 +31,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderDTO> createOrder(@RequestBody @Valid OrderDTO dto){
-        return ResponseEntity.ok().body(orderService.createOrder(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(dto));
     }
 
     @PutMapping("/{id}")
