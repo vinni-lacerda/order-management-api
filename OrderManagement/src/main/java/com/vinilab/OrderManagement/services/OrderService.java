@@ -4,12 +4,15 @@ import com.vinilab.OrderManagement.dtos.OrderDTO;
 import com.vinilab.OrderManagement.entities.Order;
 import com.vinilab.OrderManagement.entities.OrderItem;
 import com.vinilab.OrderManagement.entities.Product;
+import com.vinilab.OrderManagement.entities.User;
 import com.vinilab.OrderManagement.exceptions.OrderItemNotFoundException;
 import com.vinilab.OrderManagement.exceptions.OrderNotFoundException;
 import com.vinilab.OrderManagement.exceptions.ProductNotFoundException;
+import com.vinilab.OrderManagement.exceptions.UserNotFoundException;
 import com.vinilab.OrderManagement.mappers.OrderMapper;
 import com.vinilab.OrderManagement.repositories.OrderRepository;
 import com.vinilab.OrderManagement.repositories.ProductRepository;
+import com.vinilab.OrderManagement.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +24,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, ProductRepository productRepository) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, ProductRepository productRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -56,7 +61,7 @@ public class OrderService {
 
     public OrderDTO updateItemQuantity(Long orderId, Long itemId, Integer quantity){
         Order order = orderOrThrow(orderId);
-        OrderItem item = order.getOrderItems().stream().filter(i -> i.getId().equals(itemId)).findFirst().orElseThrow(() -> new OrderItemNotFoundException(itemId));
+        OrderItem item = findItemOrThrow(itemId, order);
 
         item.updateQuantity(quantity);
         return orderMapper.toDTO(order);
@@ -71,10 +76,7 @@ public class OrderService {
     public OrderDTO removeItem(Long id, Long itemId){
         Order order = orderOrThrow(id);
 
-        OrderItem item = order.getOrderItems().stream()
-                .filter(i -> i.getId().equals(itemId))
-                .findFirst()
-                .orElseThrow(() -> new OrderItemNotFoundException(itemId));
+        OrderItem item = findItemOrThrow(itemId, order);
 
         order.removeOrderItem(item);
 
