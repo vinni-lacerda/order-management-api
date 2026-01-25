@@ -101,5 +101,17 @@ public class OrderService {
         }
         return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
     }
+
+    @Transactional(readOnly = true)
+    public OrderItem findItemOrThrow(Long itemId, Order order){
+        if(itemId == null){
+            throw new IllegalArgumentException("Order item id cannot be null");
+        }
+
+        return order.getOrderItems().stream()
+                .filter(i -> i.getId().equals(itemId))
+                .findFirst()
+                .orElseThrow(() -> new OrderItemNotFoundException(itemId));
+    }
 }
 
