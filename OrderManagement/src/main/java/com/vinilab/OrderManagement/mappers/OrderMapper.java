@@ -2,7 +2,9 @@ package com.vinilab.OrderManagement.mappers;
 
 import com.vinilab.OrderManagement.dtos.OrderDTO;
 import com.vinilab.OrderManagement.entities.Order;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderMapper {
 
     public OrderMapper() {
